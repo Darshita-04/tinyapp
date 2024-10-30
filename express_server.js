@@ -66,10 +66,17 @@ app.get("/u/:id", (req, res) => {
 // delete URL entry from main page (List of URLs)
 
 app.post("/urls/:id/delete", (req, res) => {
-
   delete urlDatabase[req.params.id];
   res.redirect(`/urls`);
 });
+
+// update long URL
+
+app.post("/urls/:id", (req, res) => {
+  urlDatabase[req.params.id] =  req.body.longURL;
+  res.redirect(`/urls/${req.params.id}`);
+});
+
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);

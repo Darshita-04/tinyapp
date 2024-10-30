@@ -23,14 +23,18 @@
               <tr>
                 <th>Short URL ID</th>
                 <th>Long URL</th>
+                <th colspan="2" class="text-center">Action</th>
               </tr>
             </thead>
             <tbody>
               <% for (let id in urls) {%>
               <tr>
                 <td><a href="/urls/<%= id %>"><%= id %></a></td>
-                <td><%= urls[id] %></td>
-                <td>
+                <td><%= urls[id] %></td>                
+                <td width="60">
+                  <a href="/urls/<%= id %>" class="btn btn-outline btn-primary">Edit</a>
+                </td>
+                <td width="80">
                   <form method="POST" action="/urls/<%= id %>/delete">
                     <button type="submit" class="btn btn-danger">Delete</button>
                   </form>
