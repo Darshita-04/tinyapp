@@ -77,6 +77,13 @@ app.post("/urls/:id", (req, res) => {
   res.redirect(`/urls/${req.params.id}`);
 });
 
+// login
+
+app.post("/login", (req, res) => {
+  res.cookie("username", req.body.username);
+  res.redirect(`/urls`);
+});
+
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
