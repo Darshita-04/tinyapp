@@ -10,7 +10,7 @@
   <!-- header -->
   
   <%- include('partials/_header') %>
-  
+
   <!-- tiny URLs -->
 
   <section class="pt-5">
@@ -30,6 +30,11 @@
               <tr>
                 <td><a href="/urls/<%= id %>"><%= id %></a></td>
                 <td><%= urls[id] %></td>
+                <td>
+                  <form method="POST" action="/urls/<%= id %>/delete">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                  </form>
+                </td>
               </tr>
               <%} %>
             </tbody>

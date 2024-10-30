@@ -16,14 +16,20 @@ app.get("/", (req, res) => {
   res.send("Hello!");
 });
 
+// shows list of URL combinations
+
 app.get("/urls", (req, res) => {
   const templateVars = { urls: urlDatabase };
   res.render("urls_index", templateVars);
 });
 
+// redirects to new URL form page
+
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
+
+// shows individual URL combination based on id
 
 app.get("/urls/:id", (req, res) => {
   const templateVars = { id: req.params.id, longURL: urlDatabase[req.params.id] };
@@ -42,18 +48,27 @@ const generateRandomString = () => {
   return result;
 }
 
+// adds new URL combo to urlDatabase and redirects to that URL page
 
 app.post("/urls", (req, res) => {
   const id = generateRandomString(); // generate 6 char long random string
   urlDatabase[id] = req.body.longURL; // updating urlDatabses
-  console.log(urlDatabase);
   res.redirect(`/urls/${id}`);
 });
 
+// redirects to longURL when clicking on short URL
 
 app.get("/u/:id", (req, res) => {
   const longURL = urlDatabase[req.params.id];
   res.redirect(longURL);
+});
+
+// delete URL entry from main page (List of URLs)
+
+app.post("/urls/:id/delete", (req, res) => {
+
+  delete urlDatabase[req.params.id];
+  res.redirect(`/urls`);
 });
 
 app.listen(PORT, () => {
