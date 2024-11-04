@@ -37,17 +37,17 @@ app.get("/urls/:id", (req, res) => {
   const templateVars = { id: req.params.id, longURL: urlDatabase[req.params.id], username: req.cookies["username"] };
   res.render("urls_show", templateVars);
 });
-
 const generateRandomString = () => {
-  let result = '';
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const charactersLength = characters.length;
-  let counter = 0;
-  while (counter < 6) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    counter += 1;
-  }
-  return result;
+  // let result = '';
+  // const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  // const charactersLength = characters.length;
+  // let counter = 0;
+  // while (counter < 6) {
+  //   result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  //   counter += 1;
+  // }
+  return Math.random().toString(36).substring(2,8);
+
 }
 
 // adds new URL combo to urlDatabase and redirects to that URL page
@@ -92,6 +92,13 @@ app.post("/logout", (req, res) => {
   res.clearCookie("username");
   res.redirect(`/urls`);
 });
+
+// register page
+
+app.get("/register", (req, res) => {
+  const templateVars = {username: req.cookies["username"] };
+  res.render("register", templateVars);
+})
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
