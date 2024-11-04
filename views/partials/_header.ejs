@@ -20,17 +20,15 @@
         </div>
       </div>
 
-      <% if (user["email"]) {%> 
-
-        <p class="text-white mb-0">Logged in as <%= user["email"]%></p>
-        <form action="/logout" method="POST" class="mb-0">
-          <button type="submit" class="btn btn-secondary ms-2">Logout</button>
-        </form>
-
-      <%} else {%>
-        <a class="nav-item nav-link" href="/login">Login</a>
-        <a class="nav-item nav-link" href="/register">Register</a>
-      <%}%>
+        <% if (user && user["email"]) {%> 
+          <p class="text-white mb-0">Logged in as <%= user["email"]%></p>
+          <form action="/logout" method="POST" class="mb-0">
+            <button type="submit" class="btn btn-secondary ms-2">Logout</button>
+          </form>
+        <%} else {%>
+          <a class="nav-item nav-link text-white" href="/login">Login</a>
+          <a class="nav-item nav-link text-white" href="/register">Register</a>
+        <%}%>
     </div>
   </nav>
 </header>

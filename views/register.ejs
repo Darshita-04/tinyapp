@@ -7,13 +7,17 @@
 </head>
 <body>
   
+  <!-- header -->
+  
+  <%- include('partials/_header') %>
+
   <!-- registration form -->
 
   <section class="py-5">
     <div class="container">
       <div class="row">
         <div class="col-md-4 offset-md-4">
-          <h3 mb-4>Create account</h3>
+          <h3 class="mb-4">Create account</h3>
           <form action="/register" method="POST">
             <div class="form-group mb-2">
               <label for="email" class="mb-2">Email</label>
