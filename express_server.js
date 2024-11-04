@@ -13,6 +13,19 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com",
 };
 
+const users = {
+  userRandomID: {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur",
+  },
+  user2RandomID: {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk",
+  },
+};
+
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
@@ -20,21 +33,21 @@ app.get("/", (req, res) => {
 // shows list of URL combinations
 
 app.get("/urls", (req, res) => {
-  const templateVars = { urls: urlDatabase, username: req.cookies["username"] };
+  const templateVars = { urls: urlDatabase, user: users[req.cookies["user_id"]]};
   res.render("urls_index", templateVars);
 });
 
 // redirects to new URL form page
 
 app.get("/urls/new", (req, res) => {
-  const templateVars = {username: req.cookies["username"] };
+  const templateVars = {user: users[req.cookies["user_id"]]};
   res.render("urls_new", templateVars);
 });
 
 // shows individual URL combination based on id
 
 app.get("/urls/:id", (req, res) => {
-  const templateVars = { id: req.params.id, longURL: urlDatabase[req.params.id], username: req.cookies["username"] };
+  const templateVars = { id: req.params.id, longURL: urlDatabase[req.params.id], user: users[req.cookies["user_id"]]};
   res.render("urls_show", templateVars);
 });
 const generateRandomString = () => {
@@ -96,8 +109,23 @@ app.post("/logout", (req, res) => {
 // register page
 
 app.get("/register", (req, res) => {
-  const templateVars = {username: req.cookies["username"] };
+  const templateVars = {user: users[req.cookies["user_id"]] };
   res.render("register", templateVars);
+})
+
+// user registration
+app.post("/register", (req, res) => {
+  const id = generateRandomString(); // generate 6 char long random string
+  let email =  req.body.email;
+  let password = req.body.password
+  users[id] = {
+    id,
+    email,
+    password
+  }; 
+  res.cookie("user_id", id);   
+  console.log(users);
+  res.redirect(`/urls`);
 })
 
 app.listen(PORT, () => {
