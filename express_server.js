@@ -26,6 +26,8 @@ const users = {
   },
 };
 
+// check if an email already exists in the users object
+
 const getUserByEmail = (email) => {
   for (let user in users) {
     if (users[user]['email'] === email){
@@ -128,11 +130,11 @@ app.post("/register", (req, res) => {
   let password = req.body.password
 
   if (email === "" || password === "") {
-    return res.status(400).json({status: 400, message: "Please enter valid email and password"})
+    return res.status(400).json({status: 400, message: "Email and password fields cannot be empty"})
   }
 
   if(getUserByEmail(email) !== null){
-    return res.status(400).json({status: 400, message: "Email is already registered"})
+    return res.status(400).json({status: 400, message: "A user with that email already exists, try to login instead"})
   }
 
   users[id] = {
@@ -143,6 +145,14 @@ app.post("/register", (req, res) => {
   res.cookie("user_id", id);   
   res.redirect(`/urls`);
 })
+
+// login page
+
+app.get("/login", (req, res) => {
+  const templateVars = {user: users[req.cookies["user_id"]] };
+  res.render("login", templateVars);
+})
+
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
