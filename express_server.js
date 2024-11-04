@@ -50,6 +50,12 @@ app.get("/urls", (req, res) => {
 // redirects to new URL form page
 
 app.get("/urls/new", (req, res) => {
+
+  // redirect to login page if user is not registered and logged in
+  if (!req.cookies["user_id"]) {
+    res.redirect("/login");
+  }
+    
   const templateVars = {user: users[req.cookies["user_id"]]};
   res.render("urls_new", templateVars);
 });
@@ -67,6 +73,12 @@ const generateRandomString = () => {
 // adds new URL combo to urlDatabase and redirects to that URL page
 
 app.post("/urls", (req, res) => {
+
+  // if not logged in can not shorten URLs
+  if (!req.cookies["user_id"]) {
+    return res.send("<h2>You cannot shorten URLs as you are not registered or logged in into app.</h2>");
+  }
+
   const id = generateRandomString(); // generate 6 char long random string
   urlDatabase[id] = req.body.longURL; // updating urlDatabses
   res.redirect(`/urls/${id}`);
@@ -75,8 +87,7 @@ app.post("/urls", (req, res) => {
 // redirects to longURL when clicking on short URL
 
 app.get("/u/:id", (req, res) => {
-  const longURL = urlDatabase[req.params.id];
-  res.redirect(longURL);
+  urlDatabase[req.params.id] ?  res.redirect(urlDatabase[req.params.id]) : res.send("<h2>You are trying to visit wrong URL. Please check again.</h2>");
 });
 
 // delete URL entry from main page (List of URLs)
@@ -122,6 +133,12 @@ app.get("/register", (req, res) => {
   const templateVars = {
     user: req.cookies["user_id"] ? users[req.cookies["user_id"]] : null
   };
+  
+  // redirect to home page (/urls) when user already logged in
+  if (req.cookies["user_id"]) {
+    res.redirect("/urls");
+  }
+  
   res.render("register", templateVars);
 });
 
@@ -154,6 +171,10 @@ app.get("/login", (req, res) => {
   const templateVars = {
     user: req.cookies["user_id"] ? users[req.cookies["user_id"]] : null
   };
+  // redirect to home page (/urls) when user already logged in
+  if (req.cookies["user_id"]) {
+    res.redirect("/urls");
+  }
   res.render("login", templateVars);
 });
 
