@@ -1,7 +1,7 @@
 const express = require("express");
 const cookieParser = require('cookie-parser')
 const app = express();
-const PORT = 8080; // default port 8080
+const PORT = 3000; // default port 8080
 
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
@@ -31,7 +31,7 @@ const users = {
 const getUserByEmail = (email) => {
   for (let user in users) {
     if (users[user]['email'] === email){
-      return users[user];
+      return user;
     }
   }
   return null;
@@ -105,15 +105,23 @@ app.post("/urls/:id", (req, res) => {
 // login
 
 app.post("/login", (req, res) => {
-  res.cookie("username", req.body.username);
+  let email = req.body.email;
+  let password = req.body.password;
+  if(getUserByEmail(email) === null){
+    return res.status(403).json({status: 403, message: "A user with that email not exists, try to register instead"});
+  } else if (password !== users[getUserByEmail(email)]["password"]) {
+    return res.status(403).json({status: 403, message: "Email or Password is incorrect."});
+  } else {
+    res.cookie("user_id", getUserByEmail(email));
+  }
   res.redirect(`/urls`);
 });
 
 // logout
 
 app.post("/logout", (req, res) => {
-  res.clearCookie("username");
-  res.redirect(`/urls`);
+  res.clearCookie("user_id");
+  res.redirect(`/login`);
 });
 
 // register page
@@ -142,8 +150,9 @@ app.post("/register", (req, res) => {
     email,
     password
   }; 
+  console.log(users)
   res.cookie("user_id", id);   
-  res.redirect(`/urls`);
+  res.redirect(`/login`);
 })
 
 // login page
