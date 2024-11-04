@@ -120,7 +120,7 @@ app.post("/logout", (req, res) => {
 
 app.get("/register", (req, res) => {
   const templateVars = {
-    user: req.cookies["user_id"] ? req.cookies["user_id"] : null
+    user: req.cookies["user_id"] ? users[req.cookies["user_id"]] : null
   };
   res.render("register", templateVars);
 });
@@ -152,7 +152,7 @@ app.post("/register", (req, res) => {
 
 app.get("/login", (req, res) => {
   const templateVars = {
-    user: req.cookies["user_id"] ? req.cookies["user_id"] : null
+    user: req.cookies["user_id"] ? users[req.cookies["user_id"]] : null
   };
   res.render("login", templateVars);
 });
