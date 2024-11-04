@@ -26,6 +26,14 @@ const users = {
   },
 };
 
+const getUserByEmail = (email) => {
+  for (let user in users) {
+    if (users[user]['email'] === email){
+      return users[user];
+    }
+  }
+  return null;
+}
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
@@ -118,13 +126,21 @@ app.post("/register", (req, res) => {
   const id = generateRandomString(); // generate 6 char long random string
   let email =  req.body.email;
   let password = req.body.password
+
+  if (email === "" || password === "") {
+    return res.status(400).json({status: 400, message: "Please enter valid email and password"})
+  }
+
+  if(getUserByEmail(email) !== null){
+    return res.status(400).json({status: 400, message: "Email is already registered"})
+  }
+
   users[id] = {
     id,
     email,
     password
   }; 
   res.cookie("user_id", id);   
-  console.log(users);
   res.redirect(`/urls`);
 })
 
