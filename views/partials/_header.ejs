@@ -19,7 +19,6 @@
           <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
         </div>
       </div>
-
         <% if (user && user["email"]) {%> 
           <p class="text-white mb-0">Logged in as <%= user["email"]%></p>
           <form action="/logout" method="POST" class="mb-0">
