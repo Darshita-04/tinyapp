@@ -1,9 +1,10 @@
 const express = require('express');
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
+const getUserByEmail = require("./helpers.js");
 const app = express();
 const PORT = 3000; // default port 3000
-const crypto = require('crypto');
 
 const key = crypto.randomBytes(32).toString('base64');
 
@@ -37,17 +38,6 @@ const users = {
     email: 'user2@example.com',
     password: 'dishwasher-funk',
   },
-};
-
-// check if an email already exists in the users object
-
-const getUserByEmail = (email) => {
-  for (let user in users) {
-    if (users[user]['email'] === email) {
-      return user;
-    }
-  }
-  return null;
 };
 
 // generate random string for unique id
@@ -205,7 +195,7 @@ app.post('/urls/:id', (req, res) => {
 app.post('/login', (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  const user = getUserByEmail(email);
+  const user = getUserByEmail(email,users);
   const isPasswordValid = bcrypt.compareSync(password, users[user]['password']); 
 
   if (user === null) {
@@ -264,7 +254,7 @@ app.post('/register', (req, res) => {
     return res.status(400).json({status: 400, message: 'Email and password cannot be empty'});
   }
 
-  if (getUserByEmail(email) !== null) {
+  if (getUserByEmail(email,users) !== null) {
     return res.status(400).json({status: 400, message: 'User already exists, try logging in instead'});
   }
   users[id] = {
