@@ -10,4 +10,16 @@ const getUserByEmail = (email,database) => {
 };
 
 
-module.exports = getUserByEmail;
+// filter URL for loggen in users
+
+const urlsForUser = (id,databse) => {
+  const userUrls = {};
+  for (let url in databse) {
+    if (databse[url].userID === id) {
+      userUrls[url] = databse[url];
+    }
+  }
+  return userUrls;
+}
+
+module.exports = { getUserByEmail, urlsForUser};

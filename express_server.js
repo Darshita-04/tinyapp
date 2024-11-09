@@ -2,7 +2,7 @@ const express = require('express');
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
-const getUserByEmail = require("./helpers.js");
+const { getUserByEmail, urlsForUser } = require("./helpers.js");
 const app = express();
 const PORT = 3000; // default port 3000
 
@@ -46,17 +46,7 @@ const generateRandomString = () => {
   return Math.random().toString(36).substring(2,8);
 };
 
-// filter URL for loggen in users
 
-const urlsForUser = (id) => {
-  const userUrls = {};
-  for (let url in urlDatabase) {
-    if (urlDatabase[url].userID === id) {
-      userUrls[url] = urlDatabase[url];
-    }
-  }
-  return userUrls;
-}
 
 app.get('/', (req, res) => {
   res.send('Hello!');
@@ -70,7 +60,7 @@ app.get('/urls', (req, res) => {
       return res.redirect('/login');
     }
   
-  const templateVars = { urls: urlsForUser(req.session.user_id), user: users[req.session.user_id]};
+  const templateVars = { urls: urlsForUser(req.session.user_id,urlDatabase), user: users[req.session.user_id]};
   res.render('urls_index', templateVars);
 });
 
