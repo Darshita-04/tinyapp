@@ -20,6 +20,6 @@ const urlsForUser = (id,databse) => {
     }
   }
   return userUrls;
-}
+};
 
 module.exports = { getUserByEmail, urlsForUser};
