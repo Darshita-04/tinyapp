@@ -3,12 +3,15 @@ const cookieSession = require('cookie-session');
 const bcrypt = require('bcryptjs');
 const app = express();
 const PORT = 3000; // default port 3000
+const crypto = require('crypto');
+
+const key = crypto.randomBytes(32).toString('base64');
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieSession({
   name: 'session',
-  keys: [Math.random().toString(36).substring(2,22)]
+  keys: [key]
 }));
 
 
