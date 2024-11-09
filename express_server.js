@@ -209,7 +209,7 @@ app.post('/login', (req, res) => {
   const isPasswordValid = bcrypt.compareSync(password, users[user]['password']);
   if (!isPasswordValid) {
     return res.status(403).json({status: 403, message: 'Email or Password is incorrect.'});
-  } 
+  }
 
   req.session.userID = user;
   res.redirect(`/urls`);
