@@ -28,7 +28,7 @@
             </div>
           </div>
           <h3>Edit URL</h3>
-          <form action="/urls/<%= id %>" method="POST">
+          <form action="/urls/<%= id %>?_method=PUT" method="POST">
             <div class="form-group mb-2">
               <label for="longURL" class="mb-2">New URL</label>
               <input class="form-control" type="text" name="longURL" placeholder="http://"/>

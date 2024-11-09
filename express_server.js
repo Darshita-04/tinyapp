@@ -1,4 +1,5 @@
 const express = require('express');
+const methodOverride = require('method-override');
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
@@ -14,6 +15,7 @@ app.use(cookieSession({
   name: 'session',
   keys: [key]
 }));
+app.use(methodOverride('_method'));
 
 
 const urlDatabase = {
@@ -130,7 +132,7 @@ app.post('/urls', (req, res) => {
 
 // delete URL entry from main page (List of URLs)
 
-app.post('/urls/:id/delete', (req, res) => {
+app.delete('/urls/:id/delete', (req, res) => {
 
   // if the URL not exists
 
@@ -156,7 +158,7 @@ app.post('/urls/:id/delete', (req, res) => {
 
 // update long URL
 
-app.post('/urls/:id', (req, res) => {
+app.put('/urls/:id', (req, res) => {
 
   // if the URL not exists
 
@@ -180,24 +182,6 @@ app.post('/urls/:id', (req, res) => {
   res.redirect(`/urls/${req.params.id}`);
 });
 
-// login
-
-app.post('/login', (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
-  const user = getUserByEmail(email,users);
-  const isPasswordValid = bcrypt.compareSync(password, users[user]['password']);
-
-  if (user === null) {
-    return res.status(403).json({status: 403, message: 'A user with that email not exists, try to register instead'});
-  } else if (!isPasswordValid) {
-    return res.status(403).json({status: 403, message: 'Email or Password is incorrect.'});
-  } else {
-    req.session.userID = user;
-  }
-  res.redirect(`/urls`);
-});
-
 // login page
 
 app.get('/login', (req, res) => {
@@ -210,6 +194,27 @@ app.get('/login', (req, res) => {
   };
   res.render('login', templateVars);
 });
+
+// login
+
+app.post('/login', (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  const user = getUserByEmail(email,users);
+
+  if (user === null) {
+    return res.status(403).json({status: 403, message: 'A user with that email not exists, try to register instead'});
+  }
+  
+  const isPasswordValid = bcrypt.compareSync(password, users[user]['password']);
+  if (!isPasswordValid) {
+    return res.status(403).json({status: 403, message: 'Email or Password is incorrect.'});
+  } 
+
+  req.session.userID = user;
+  res.redirect(`/urls`);
+});
+
 
 // logout
 
