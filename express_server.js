@@ -1,6 +1,7 @@
 const express = require('express');
 const methodOverride = require('method-override');
 const cookieSession = require('cookie-session');
+const { urlDatabase, users } = require('./database');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const { getUserByEmail, urlsForUser } = require("./helpers.js");
@@ -18,30 +19,6 @@ app.use(cookieSession({
 app.use(methodOverride('_method'));
 
 
-const urlDatabase = {
-  b6UTxQ: {
-    longURL: 'https://www.tsn.ca',
-    userID: 'aJ48lW',
-  },
-  i3BoGr: {
-    longURL: 'https://www.google.ca',
-    userID: 'aJ48lW',
-  },
-};
-
-const users = {
-  userRandomID: {
-    id: 'userRandomID',
-    email: 'user@example.com',
-    password: 'purple-monkey-dinosaur',
-  },
-  user2RandomID: {
-    id: 'user2RandomID',
-    email: 'user2@example.com',
-    password: 'dishwasher-funk',
-  },
-};
-
 // generate random string for unique id
 
 const generateRandomString = () => {
@@ -51,7 +28,7 @@ const generateRandomString = () => {
 
 
 app.get('/', (req, res) => {
-  res.send('Hello!');
+  return res.redirect('/urls');
 });
 
 // shows list of URL combinations
@@ -59,7 +36,7 @@ app.get('/', (req, res) => {
 app.get('/urls', (req, res) => {
   //if not logged in
   if (!req.session.userID) {
-    return res.redirect('/login');
+    return res.send('<h2>You must logged in or register to access this page.</h2>');
   }
   
   const templateVars = { urls: urlsForUser(req.session.userID,urlDatabase), user: users[req.session.userID]};
@@ -71,7 +48,7 @@ app.get('/urls', (req, res) => {
 app.get('/urls/new', (req, res) => {
   //if not logged in
   if (!req.session.userID) {
-    return res.redirect('/login');
+    return res.send('<h2>You must logged in or register to access this page.</h2>');
   }
   const templateVars = {user: users[req.session.userID]};
   res.render('urls_new', templateVars);
@@ -90,7 +67,7 @@ app.get('/urls/:id', (req, res) => {
   //if not logged in
 
   if (!req.session.userID) {
-    return res.redirect('/login');
+    return res.send('<h2>You must logged in or register to access this page.</h2>');
   }
 
   // check if the URL belongs to the logged in user
